@@ -1,0 +1,81 @@
+processor NoteGenerator
+{
+    input event
+    {
+        std::timeline::TimeSignature    timeSigIn;
+        std::timeline::Tempo            tempoIn;
+        std::midi::Message              midiIn;
+    }
+
+    output event (std::notes::NoteOn, std::notes::NoteOff) eventOut;
+
+    std::timeline::TimeSignature timeSig;
+    std::timeline::Tempo tempo;
+    std::midi::Message msg;
+
+    event timeSigIn (std::timeline::TimeSignature t)
+    {
+        timeSig = t;
+    }
+
+    event tempoIn (std::timeline::Tempo t)
+    {
+        tempo = t;
+    }
+
+    event midiIn (std::midi::Message m)
+    {
+        msg = m;
+    }
+
+    const float SCALE_16TH_NOTE = 0.25;
+
+    void playNote(int pitch)
+    {
+        let fpqn = tempo.framesPerQuarterNote(timeSig, processor.frequency);
+        let numFrames = roundToInt(SCALE_16TH_NOTE * fpqn);
+
+        // fpqn = 24,000 (120bpm @ 48kHz)
+        // fpqn = 48,000 (60bpm @ 48kHz)
+        let ch = fpqn == 24000 ? 15 : 10;
+
+        let pch = float(pitch);
+        let vel = 80 / 127.0_f32;
+
+        std::notes::NoteOn noteOn;
+        noteOn.pitch = pch;
+        noteOn.velocity = vel;
+        noteOn.channel = ch;
+        eventOut <- noteOn;
+
+        loop (numFrames)
+        {
+            // Ends the note early if midiIn is a Note Off
+            if (msg.isNoteOff())
+            {
+                break;
+            }
+
+            advance();
+        }
+
+        std::notes::NoteOff noteOff;
+        noteOff.pitch = pch;
+        noteOff.velocity = vel;
+        noteOff.channel = ch;
+        eventOut <- noteOff;
+    }
+
+    void main()
+    {
+        loop
+        {
+            if (msg.isNoteOn())
+            {
+                playNote(msg.getNoteNumber());
+            }
+
+            advance();
+        }
+    }
+}

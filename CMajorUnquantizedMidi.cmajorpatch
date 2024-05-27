@@ -1,0 +1,14 @@
+{
+  "CmajorVersion": 1,
+  "ID": "com.atamocius.CMajorUnquantizedMidi",
+  "version": "1.0",
+  "name": "CMajorUnquantizedMidi",
+  "description": "CMajorUnquantizedMidi",
+  "category": "generator",
+  "manufacturer": "atamocius",
+  "isInstrument": true,
+  "source": [
+    "Main.cmajor",
+    "NoteGenerator.cmajor"
+  ]
+}

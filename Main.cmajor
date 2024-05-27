@@ -1,0 +1,22 @@
+graph Main [[ main ]]
+{
+    input event
+    {
+        std::timeline::TimeSignature    timeSigIn;
+        std::timeline::Tempo            tempoIn;
+        std::midi::Message              midiIn;
+    }
+
+    output event std::midi::Message midiOut;
+
+    node gen = NoteGenerator;
+
+    connection
+    {
+        timeSigIn -> gen.timeSigIn;
+        tempoIn -> gen.tempoIn;
+        midiIn -> gen.midiIn;
+
+        gen -> std::midi::NoteToMIDI -> midiOut;
+    }
+}
