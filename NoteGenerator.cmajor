@@ -74,8 +74,10 @@ processor NoteGenerator
             {
                 playNote(msg.getNoteNumber());
             }
-
-            advance();
+            else
+            {
+                advance();
+            }
         }
     }
 }
