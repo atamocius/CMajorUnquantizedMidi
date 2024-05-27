@@ -1,0 +1,1 @@
+## runScript ({ frequency:48000, blockSize:64, samplesToRender:49000, subDir: "t1", patch: "../CMajorUnquantizedMidi.cmajorpatch" })
