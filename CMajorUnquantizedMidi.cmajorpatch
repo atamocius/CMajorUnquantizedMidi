@@ -6,6 +6,10 @@
   "description": "CMajorUnquantizedMidi",
   "category": "generator",
   "manufacturer": "atamocius",
+  "plugin": {
+    "pluginCode": "cmum",
+    "manufacturerCode": "Atam"
+  },
   "isInstrument": true,
   "source": [
     "Main.cmajor",
